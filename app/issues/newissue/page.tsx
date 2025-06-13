@@ -13,6 +13,16 @@ interface IssueForm {
   priority: string;
 }
 
+// Activity log function
+const logActivity = (
+  type: "CREATED" | "UPDATED" | "CLOSED",
+  message: string
+) => {
+  const logs = JSON.parse(localStorage.getItem("activityLogs") || "[]");
+  logs.push({ type, message, timestamp: new Date().toISOString() });
+  localStorage.setItem("activityLogs", JSON.stringify(logs));
+};
+
 const Page = () => {
   const router = useRouter();
   const { register, control, handleSubmit, reset } = useForm<IssueForm>();
@@ -30,6 +40,10 @@ const Page = () => {
         "issues",
         JSON.stringify([newIssue, ...existingIssues])
       );
+
+      // Log the creation
+      logActivity("CREATED", `Issue "${data.title}" was created.`);
+
       reset(); // clear form
       router.push("/issues"); // navigate (optional)
     } catch (error) {

@@ -2,28 +2,27 @@
 
 import React, { useEffect, useState } from "react";
 
-interface Issue {
-  title: string;
-  description: string;
-  status: "OPEN" | "IN_PROGRESS" | "CLOSED";
-  createdAt?: string;
+interface ActivityLog {
+  message: string;
+  type: "CREATED" | "UPDATED" | "CLOSED";
+  timestamp: string;
 }
 
-const AllIssuesPage = () => {
-  const [issues, setIssues] = useState<Issue[]>([]);
+const ActivityLogsPage = () => {
+  const [logs, setLogs] = useState<ActivityLog[]>([]);
 
   useEffect(() => {
-    const storedIssues = localStorage.getItem("issues");
-    if (storedIssues) {
-      setIssues(JSON.parse(storedIssues));
+    const storedLogs = localStorage.getItem("activityLogs");
+    if (storedLogs) {
+      setLogs(JSON.parse(storedLogs));
     }
   }, []);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "OPEN":
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case "CREATED":
         return "bg-green-100 text-green-800";
-      case "IN_PROGRESS":
+      case "UPDATED":
         return "bg-yellow-100 text-yellow-800";
       case "CLOSED":
         return "bg-red-100 text-red-800";
@@ -33,40 +32,43 @@ const AllIssuesPage = () => {
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">All Issues</h1>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Activity Logs</h1>
 
-      {issues.length === 0 ? (
-        <p className="text-gray-600">No issues found.</p>
+      {logs.length === 0 ? (
+        <p className="text-gray-600">No activity recorded yet.</p>
       ) : (
-        <div className="grid gap-6">
-          {issues.map((issue, index) => (
-            <div
-              key={index}
-              className="p-5 rounded-xl shadow border border-gray-200 bg-white"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-xl font-semibold">{issue.title}</h2>
+        <ul className="space-y-4">
+          {logs
+            .sort(
+              (a, b) =>
+                new Date(b.timestamp).getTime() -
+                new Date(a.timestamp).getTime()
+            )
+            .map((log, index) => (
+              <li
+                key={index}
+                className="p-4 border rounded-xl bg-white shadow-sm flex justify-between items-center"
+              >
+                <div>
+                  <p className="text-gray-800">{log.message}</p>
+                  <p className="text-sm text-gray-400">
+                    {new Date(log.timestamp).toLocaleString()}
+                  </p>
+                </div>
                 <span
-                  className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(
-                    issue.status
+                  className={`px-3 py-1 text-sm font-medium rounded-full ${getTypeColor(
+                    log.type
                   )}`}
                 >
-                  {issue.status}
+                  {log.type}
                 </span>
-              </div>
-              <p className="text-gray-700">{issue.description}</p>
-              {issue.createdAt && (
-                <p className="text-sm text-gray-400 mt-2">
-                  Created: {new Date(issue.createdAt).toLocaleString()}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
+              </li>
+            ))}
+        </ul>
       )}
     </div>
   );
 };
 
-export default AllIssuesPage;
+export default ActivityLogsPage;
