@@ -65,7 +65,6 @@ const Navbar = () => {
           })}
         </ul>
 
-        {/* Dev Mode Icon Button */}
         <div ref={devBtnRef} className="relative">
           <button
             onClick={handleDevAccess}
@@ -77,7 +76,6 @@ const Navbar = () => {
             <h1>Dev-mode</h1>
           </button>
 
-          {/* Small modal positioned below the button */}
           {showModal && (
             <div className="absolute right-0 mt-2 w-72 bg-white p-5 rounded-xl shadow-xl border z-50">
               <h2 className="text-lg font-semibold mb-3 text-center">

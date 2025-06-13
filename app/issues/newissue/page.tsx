@@ -13,7 +13,6 @@ interface IssueForm {
   priority: string;
 }
 
-// Activity log function
 const logActivity = (
   type: "CREATED" | "UPDATED" | "CLOSED",
   message: string
@@ -41,11 +40,10 @@ const Page = () => {
         JSON.stringify([newIssue, ...existingIssues])
       );
 
-      // Log the creation
       logActivity("CREATED", `Issue "${data.title}" was created.`);
 
-      reset(); // clear form
-      router.push("/issues"); // navigate (optional)
+      reset();
+      router.push("/issues");
     } catch (error) {
       console.error("Failed to store issue:", error);
     }
