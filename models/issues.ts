@@ -1,4 +1,4 @@
-// models/Issue.js
+
 import mongoose from "mongoose";
 
 const issueSchema = new mongoose.Schema(
@@ -17,11 +17,13 @@ const issueSchema = new mongoose.Schema(
       enum: ["OPEN", "IN_PROGRESS", "CLOSED"],
       default: "OPEN",
     },
+    priority: {
+      type: String,
+      enum: ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+      default: "LOW",
+    },
   },
-  { timestamps: true } 
+  { timestamps: true }
 );
-
-
 const Issue = mongoose.models.Issue || mongoose.model("Issue", issueSchema);
-
 export default Issue;
